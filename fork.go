@@ -11,16 +11,20 @@ func Fork(forkId uint8, reqs chan ForkReq) {
 			return
 		}
 		if req.Action == putdown {
+			if state == free {
+				panic("Fork putdown requested when not picked up")
+			}
 			state = free
-			fmt.Println("Fork", forkId, "free")
+			fmt.Println("Fork", forkId, "put down by phil", req.philId)
 			continue
 		}
 		if state != free {
+			fmt.Println("Fork", forkId, "pick up by phil", req.philId, "failed")
 			req.ack <- nok
 			continue
 		}
 		state = inuse
-		fmt.Println("Fork", forkId, "in use")
+		fmt.Println("Fork", forkId, "picked up by phil", req.philId)
 		req.ack <- ok
 	}
 

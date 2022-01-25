@@ -12,6 +12,9 @@ func Room(reqs chan RoomReq) {
 			return
 		}
 		if req.Action == exit {
+			if occupancy == 0 {
+				panic("Room about to have negative occupancy")
+			}
 			occupancy--
 			fmt.Println("Room occupancy decremented", occupancy)
 			continue
