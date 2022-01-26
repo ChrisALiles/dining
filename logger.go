@@ -7,9 +7,14 @@ import (
 )
 
 var logchan chan string
+var nl bool
 
-func Logger(log chan string) {
+func Logger(log chan string, nolog bool) {
 	logchan = log
+	nl = nolog
+	if nolog {
+		return
+	}
 	f, err := os.Create(logfile)
 	if err != nil {
 		fmt.Println("Unable to create log file ", err)
@@ -22,5 +27,7 @@ func Logger(log chan string) {
 }
 
 func Log(text string) {
-	logchan <- text
+	if !nl {
+		logchan <- text
+	}
 }

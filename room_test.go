@@ -4,7 +4,7 @@ import "testing"
 
 func TestRoom(t *testing.T) {
 	log := make(chan string)
-	go Logger(log)
+	go Logger(log, true)
 	var req RoomReq
 	reqs := make(chan RoomReq)
 	ack := make(chan any)
@@ -40,11 +40,7 @@ func TestRoom(t *testing.T) {
 	t.Run("Quit", func(t *testing.T) {
 		req.Action = Quit
 		reqs <- req
-		select {
-		case reqs <- req:
-			t.Errorf("Room did not quit")
-		default:
-		}
-
+		close(reqs)
+		<-quitack // Is this really a test?
 	})
 }

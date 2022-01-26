@@ -4,7 +4,7 @@ import "testing"
 
 func TestFork(t *testing.T) {
 	log := make(chan string)
-	go Logger(log)
+	go Logger(log, true)
 	var req ForkReq
 	reqs := make(chan ForkReq)
 	ack := make(chan any)

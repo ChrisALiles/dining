@@ -1,13 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
 	"github.com/ChrisALiles/dining"
 )
 
+var runtime int64
+var nolog bool
+
 func main() {
+	getflags()
 
 	var roomreq dining.RoomReq
 	var forkreq dining.ForkReq
@@ -40,9 +45,9 @@ func main() {
 	log := make(chan string)
 
 	// Activate the logger
-	go dining.Logger(log)
+	go dining.Logger(log, nolog)
 
-	timeout := time.After(10 * time.Second)
+	timeout := time.After(time.Duration(runtime) * time.Second)
 
 	// Activate the room.
 	go dining.Room(philRoom, roomack)
@@ -116,4 +121,14 @@ func main() {
 
 	<-roomack
 	close(log)
+}
+
+func getflags() {
+	// Parsing command line flags
+	rt := flag.Int64("t", 1, "Run time in seconds")
+	nl := flag.Bool("nl", false, "Turn off logging")
+
+	flag.Parse()
+	runtime = *rt
+	nolog = *nl
 }
