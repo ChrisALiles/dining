@@ -21,4 +21,6 @@ const (
 	nok
 	free
 	inuse
+
+	logfile = "./diningout"
 )

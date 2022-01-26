@@ -28,7 +28,7 @@ func Philosopher(philId uint8,
 		// Housekeeping - check for quit signal.
 		select {
 		case <-quitreq:
-			fmt.Println("Phil", philId, "is exiting")
+			Log(fmt.Sprintln("Phil", philId, "is exiting"))
 			return
 		default:
 		}
@@ -42,10 +42,10 @@ func Philosopher(philId uint8,
 		for {
 			room <- roomreq
 			if roomresp := <-roomack; roomresp == ok {
-				fmt.Println("Phil", philId, "has entered the room")
+				Log(fmt.Sprintln("Phil", philId, "has entered the room"))
 				break
 			}
-			fmt.Println("Phil", philId, "waiting for the room")
+			Log(fmt.Sprintln("Phil", philId, "waiting for the room"))
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
 		}
 		// Now pickup the first fork.
@@ -53,20 +53,20 @@ func Philosopher(philId uint8,
 		for {
 			fork1 <- forkreq
 			if forkresp := <-forkack; forkresp == ok {
-				fmt.Println("Phil", philId, "has picked up fork")
+				Log(fmt.Sprintln("Phil", philId, "has picked up fork"))
 				break
 			}
-			fmt.Println("Phil", philId, "is waiting for fork")
+			Log(fmt.Sprintln("Phil", philId, "is waiting for fork"))
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
 		}
 		// Then the second.
 		for {
 			fork2 <- forkreq
 			if forkresp := <-forkack; forkresp == ok {
-				fmt.Println("Phil", philId, "has picked up second fork")
+				Log(fmt.Sprintln("Phil", philId, "has picked up second fork"))
 				break
 			}
-			fmt.Println("Phil", philId, "is waiting for second fork")
+			Log(fmt.Sprintln("Phil", philId, "is waiting for second fork"))
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
 		}
 		// Now, eat.
@@ -76,10 +76,10 @@ func Philosopher(philId uint8,
 		forkreq.Action = putdown
 		fork2 <- forkreq
 		fork1 <- forkreq
-		fmt.Println("Phil", philId, "has put down 2 forks")
+		Log(fmt.Sprintln("Phil", philId, "has put down 2 forks"))
 		roomreq.Action = exit
 		room <- roomreq
-		fmt.Println("phil", philId, "has left the room")
+		Log(fmt.Sprintln("phil", philId, "has left the room"))
 	}
 
 }

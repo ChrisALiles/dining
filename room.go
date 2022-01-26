@@ -1,14 +1,20 @@
 package dining
 
-import "fmt"
+import (
+	"fmt"
+)
 
-func Room(reqs chan RoomReq) {
+func Room(reqs chan RoomReq, ack chan any) {
 	var occupancy uint8
 
 	for {
 		req := <-reqs
 		if req.Action == Quit {
-			fmt.Println("Room exiting")
+			// Drain the request channel.
+			for range reqs {
+			}
+			Log(fmt.Sprintln("Room exiting"))
+			ack <- true
 			return
 		}
 		if req.Action == exit {
@@ -16,15 +22,15 @@ func Room(reqs chan RoomReq) {
 				panic("Room about to have negative occupancy")
 			}
 			occupancy--
-			fmt.Println("Room occupancy decremented", occupancy)
+			Log(fmt.Sprintln("Room occupancy decremented to", occupancy))
 			continue
 		}
 		if occupancy == 4 {
 			req.ack <- nok
-		} else {
-			occupancy++
-			fmt.Println("Room occupancy incremented", occupancy)
-			req.ack <- ok
+			continue
 		}
+		occupancy++
+		Log(fmt.Sprintln("Room occupancy incremented to", occupancy))
+		req.ack <- ok
 	}
 }

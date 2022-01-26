@@ -34,13 +34,18 @@ func main() {
 	philFork4 := make(chan dining.ForkReq)
 
 	philRoom := make(chan dining.RoomReq)
+	roomack := make(chan any)
 
 	quitreq := make(chan any)
+	log := make(chan string)
 
-	timeout := time.After(1 * time.Second)
+	// Activate the logger
+	go dining.Logger(log)
+
+	timeout := time.After(10 * time.Second)
 
 	// Activate the room.
-	go dining.Room(philRoom)
+	go dining.Room(philRoom, roomack)
 
 	// Activate the philosophers.
 	go dining.Philosopher(0,
@@ -88,7 +93,9 @@ func main() {
 
 	// Wait to be timed out.
 	<-timeout
-	fmt.Println("TIMED OUT")
+
+	dining.Log(fmt.Sprintln("TIMED OUT"))
+
 	// Brig everything to a halt.
 	// Ask the philosophers to quit first.
 	for i := 1; i < 6; i++ {
@@ -96,12 +103,17 @@ func main() {
 	}
 	// Now the forks and the room.
 	forkreq.Action = dining.Quit
-	roomreq.Action = dining.Quit
+
 	philFork0 <- forkreq
 	philFork1 <- forkreq
 	philFork2 <- forkreq
 	philFork3 <- forkreq
 	philFork4 <- forkreq
 
+	roomreq.Action = dining.Quit
 	philRoom <- roomreq
+	close(philRoom)
+
+	<-roomack
+	close(log)
 }

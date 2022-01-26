@@ -3,6 +3,8 @@ package dining
 import "testing"
 
 func TestFork(t *testing.T) {
+	log := make(chan string)
+	go Logger(log)
 	var req ForkReq
 	reqs := make(chan ForkReq)
 	ack := make(chan any)

@@ -3,10 +3,13 @@ package dining
 import "testing"
 
 func TestRoom(t *testing.T) {
+	log := make(chan string)
+	go Logger(log)
 	var req RoomReq
 	reqs := make(chan RoomReq)
 	ack := make(chan any)
-	go Room(reqs)
+	quitack := make(chan any)
+	go Room(reqs, quitack)
 	t.Run("One entry", func(t *testing.T) {
 		req.Action = entry
 		req.ack = ack
