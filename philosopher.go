@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// Philosopher defines the life of a philosopher, enabled by
+// communication with Forks and the Room.
 func Philosopher(philId uint8,
 	room chan RoomReq,
 	roomack chan any,
@@ -22,7 +24,7 @@ func Philosopher(philId uint8,
 
 	var forkreq ForkReq
 	forkreq.philId = philId
-	forkreq.ack = forkack
+	forkreq.Ack = forkack
 
 	for {
 		// Housekeeping - check for quit signal.
@@ -79,7 +81,7 @@ func Philosopher(philId uint8,
 		Log(fmt.Sprintln("Phil", philId, "has put down 2 forks"))
 		roomreq.Action = exit
 		room <- roomreq
-		Log(fmt.Sprintln("phil", philId, "has left the room"))
+		Log(fmt.Sprintln("Phil", philId, "has left the room"))
 	}
 
 }

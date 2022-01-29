@@ -42,6 +42,7 @@ func main() {
 	roomack := make(chan any)
 
 	quitreq := make(chan any)
+	forkack := make(chan any)
 	log := make(chan string)
 
 	// Activate the logger
@@ -108,12 +109,17 @@ func main() {
 	}
 	// Now the forks and the room.
 	forkreq.Action = dining.Quit
+	forkreq.Ack = forkack
 
 	philFork0 <- forkreq
 	philFork1 <- forkreq
 	philFork2 <- forkreq
 	philFork3 <- forkreq
 	philFork4 <- forkreq
+
+	for i := 1; i < 6; i++ {
+		<-forkack
+	}
 
 	roomreq.Action = dining.Quit
 	philRoom <- roomreq

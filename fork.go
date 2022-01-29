@@ -10,6 +10,7 @@ func Fork(forkId uint8, reqs chan ForkReq) {
 		req := <-reqs
 		if req.Action == Quit {
 			Log(fmt.Sprintln("Fork", forkId, "exiting"))
+			req.Ack <- ok
 			return
 		}
 		if req.Action == putdown {
@@ -22,12 +23,12 @@ func Fork(forkId uint8, reqs chan ForkReq) {
 		}
 		if state != free {
 			Log(fmt.Sprintln("Fork", forkId, "pick up by phil", req.philId, "failed"))
-			req.ack <- nok
+			req.Ack <- nok
 			continue
 		}
 		state = inuse
 		Log(fmt.Sprintln("Fork", forkId, "picked up by phil", req.philId))
-		req.ack <- ok
+		req.Ack <- ok
 	}
 
 }

@@ -11,7 +11,7 @@ func TestFork(t *testing.T) {
 	go Fork(4, reqs)
 	t.Run("Pickup", func(t *testing.T) {
 		req.Action = pickup
-		req.ack = ack
+		req.Ack = ack
 		reqs <- req
 		if r := <-ack; r != ok {
 			t.Errorf("ack is %v", r)
