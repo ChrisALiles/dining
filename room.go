@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// Room regulates the attendance of the philosophers.
 func Room(reqs chan RoomReq, ack chan any) {
 	var occupancy uint8
 
@@ -25,6 +26,7 @@ func Room(reqs chan RoomReq, ack chan any) {
 			Log(fmt.Sprintln("Room occupancy decremented to", occupancy))
 			continue
 		}
+		// A amximum of 4 philosophErs are allowed to enter.
 		if occupancy == 4 {
 			req.ack <- nok
 			continue

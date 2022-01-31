@@ -24,11 +24,13 @@ func TestMain(m *testing.M) {
 		fmt.Fprintln(os.Stderr, "Cannot run program", binName, err)
 		os.Exit(1)
 	}
+	// Read the log file.
 	var berr error
 	buffer, berr = os.ReadFile(log)
 	if berr != nil {
 		fmt.Fprintln(os.Stderr, "Cannot read log file", log, berr)
 	}
+	// Run the tests.
 	result := m.Run()
 	os.Remove(binName)
 	os.Remove(log)
@@ -63,6 +65,7 @@ func TestDining(t *testing.T) {
 		{name: "Fork 3 Stopping", want: "Fork 3 exiting", msg: "Fork 3 did not stop."},
 		{name: "Fork 4 Stopping", want: "Fork 4 exiting", msg: "Fork 4 did not stop."},
 	}
+	// Each test searches the buffer (log file) for the expected string.
 	for _, te := range tests {
 		t.Run(te.name, func(t *testing.T) {
 			match, err := regexp.Match(te.want, buffer)

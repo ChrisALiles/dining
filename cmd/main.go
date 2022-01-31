@@ -17,7 +17,7 @@ func main() {
 	var roomreq dining.RoomReq
 	var forkreq dining.ForkReq
 
-	// Channels from room to each philosopher.
+	// Channels from the room to each philosopher.
 	roomPhil0 := make(chan any)
 	roomPhil1 := make(chan any)
 	roomPhil2 := make(chan any)
@@ -130,7 +130,7 @@ func main() {
 }
 
 func getflags() {
-	// Parsing command line flags
+	// Parse command line flags.
 	rt := flag.Int64("t", 1, "Run time in seconds")
 	nl := flag.Bool("nl", false, "Turn off logging")
 

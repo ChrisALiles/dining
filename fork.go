@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// The behaviour of a fork.
 func Fork(forkId uint8, reqs chan ForkReq) {
 	state := free
 	for {

@@ -9,6 +9,8 @@ import (
 var logchan chan string
 var nl bool
 
+// Lgger creates the log file and writes the entries passed to
+// via the channel.
 func Logger(log chan string, nolog bool) {
 	logchan = log
 	nl = nolog
@@ -26,6 +28,7 @@ func Logger(log chan string, nolog bool) {
 	}
 }
 
+// Pass log entries to the Logger via the channel.
 func Log(text string) {
 	if !nl {
 		logchan <- text
